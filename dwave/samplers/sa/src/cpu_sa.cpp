@@ -18,7 +18,9 @@
 #include <math.h>
 #include <vector>
 #include <stdexcept>
+#include <chrono>
 #include "cpu_sa.h"
+
 
 
 // xorshift128+ as defined https://en.wikipedia.org/wiki/Xorshift#xorshift.2B
@@ -262,7 +264,8 @@ int general_simulated_annealing(
     const VariableOrder varorder,
     const Proposal proposal_acceptance_criteria,
     callback interrupt_callback,
-    void * const interrupt_function
+    void * const interrupt_function,
+    const double timeout
 ) {
     // TODO 
     // assert len(states) == num_samples*num_vars*sizeof(int8_t)
@@ -290,6 +293,8 @@ int general_simulated_annealing(
     // except neighbour_couplings[i][j] is the weight on the coupling between i
     // and its jth neighbor
     vector<vector<double>> neighbour_couplings(num_vars);
+
+    std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
 
     // build the degrees, neighbors, and neighbour_couplings vectors by
     // iterating over the inputted coupler vectors
@@ -353,6 +358,10 @@ int general_simulated_annealing(
 
         // if interrupt_function returns true, stop sampling
         if (interrupt_function && interrupt_callback(interrupt_function)) break;
+
+        std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+        auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
+        if (elapsedTime >= timeout) break;
     }
 
     // return the number of samples we actually took

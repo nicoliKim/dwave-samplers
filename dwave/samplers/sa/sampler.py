@@ -144,6 +144,7 @@ class SimulatedAnnealingSampler(dimod.Sampler, dimod.Initialized):
                initial_states_generator: InitialStateGenerator = "random",
                randomize_order: bool = False,
                proposal_acceptance_criteria: str = 'Metropolis',
+               timeout: float = 1,
                **kwargs) -> dimod.SampleSet:
         """Sample from a binary quadratic model.
 
@@ -248,6 +249,9 @@ class SimulatedAnnealingSampler(dimod.Sampler, dimod.Initialized):
                 simulated annealing. If the function returns True, simulated
                 annealing terminates and returns with all of the samples and
                 energies found so far.
+            
+            timeout:
+                Stopping criteria as a function of time. Expressed in seconds.
 
         Returns:
             A `dimod.SampleSet` for the binary quadratic model.
@@ -296,6 +300,8 @@ class SimulatedAnnealingSampler(dimod.Sampler, dimod.Initialized):
                Boltzmann's constant.
 
         """
+        print("WE ACTUALLY CHANGED SOMETHING, HOORAY!")
+        print(timeout)
         timestamp_preprocess = perf_counter_ns()
         # get the original vartype so we can return consistently
         original_vartype = bqm.vartype
@@ -411,7 +417,7 @@ class SimulatedAnnealingSampler(dimod.Sampler, dimod.Initialized):
             num_sweeps_per_beta, beta_schedule,
             seed, initial_states_array,
             randomize_order, proposal_acceptance_criteria,
-            interrupt_function)
+            interrupt_function, timeout)
         timestamp_postprocess = perf_counter_ns()
 
         info = {

@@ -44,7 +44,8 @@ cdef extern from "cpu_sa.h":
             const VariableOrder varorder,
             const Proposal proposal_acceptance_criteria,
             callback interrupt_callback,
-            void *interrupt_function) nogil
+            void *interrupt_function,
+            const double timeout) nogil
 
 
 def simulated_annealing(num_samples, h, coupler_starts, coupler_ends,
@@ -52,7 +53,8 @@ def simulated_annealing(num_samples, h, coupler_starts, coupler_ends,
                         np.ndarray[np.int8_t, ndim=2, mode="c"] states_numpy,
                         randomize_order=False,
                         proposal_acceptance_criteria='Metropolis',
-                        interrupt_function=None):
+                        interrupt_function=None,
+                        timeout=None):
     """Wraps `general_simulated_annealing` from `cpu_sa.cpp`. Accepts
     an Ising problem defined on a general graph and returns samples
     using simulated annealing.
@@ -172,7 +174,7 @@ def simulated_annealing(num_samples, h, coupler_starts, coupler_ends,
         _interrupt_function = NULL
     else:
         _interrupt_function = <void *>interrupt_function
-
+    cdef double _timeout = timeout
 
     with nogil:
         num = general_simulated_annealing(_states,
@@ -188,7 +190,8 @@ def simulated_annealing(num_samples, h, coupler_starts, coupler_ends,
                                           _varorder,
                                           _proposal_acceptance_criteria,
                                           interrupt_callback,
-                                          _interrupt_function)
+                                          _interrupt_function,
+                                          _timeout)
 
     # discard the noise if we were interrupted
     return states_numpy[:num], energies_numpy[:num]
