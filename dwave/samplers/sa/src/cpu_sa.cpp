@@ -19,7 +19,9 @@
 #include <vector>
 #include <stdexcept>
 #include <chrono>
+#include <iostream>  // Include the iostream library
 #include "cpu_sa.h"
+
 
 
 
@@ -339,6 +341,12 @@ int general_simulated_annealing(
                                                      neighbors, neighbour_couplings,
                                                      sweeps_per_beta, beta_schedule);
           }
+            std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+            auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
+            std::cout<<"Entered modified function\n"<<std::endl;
+            // exit(1);
+            if (elapsedTime >= timeout) break;
+            
         } else {
             if (proposal_acceptance_criteria == Metropolis) {
                 simulated_annealing_run<Sequential, Metropolis>(state, h, degrees,
@@ -349,6 +357,12 @@ int general_simulated_annealing(
                                                       neighbors, neighbour_couplings,
                                                       sweeps_per_beta, beta_schedule);
             }
+
+            std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+            auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
+            std::cout<<"Entered modified function\n"<<std::endl;
+            //exit(1);
+            if (elapsedTime >= timeout) break;
         }
         // compute the energy of the sample and store it in `energies`
         energies[sample] = get_state_energy(state, h, coupler_starts, 
@@ -359,9 +373,6 @@ int general_simulated_annealing(
         // if interrupt_function returns true, stop sampling
         if (interrupt_function && interrupt_callback(interrupt_function)) break;
 
-        std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
-        auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
-        if (elapsedTime >= timeout) break;
     }
 
     // return the number of samples we actually took

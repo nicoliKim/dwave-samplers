@@ -54,7 +54,7 @@ def simulated_annealing(num_samples, h, coupler_starts, coupler_ends,
                         randomize_order=False,
                         proposal_acceptance_criteria='Metropolis',
                         interrupt_function=None,
-                        timeout=None):
+                        timeout=1.0):
     """Wraps `general_simulated_annealing` from `cpu_sa.cpp`. Accepts
     an Ising problem defined on a general graph and returns samples
     using simulated annealing.
