@@ -300,8 +300,8 @@ class SimulatedAnnealingSampler(dimod.Sampler, dimod.Initialized):
                Boltzmann's constant.
 
         """
-        print("WE ACTUALLY CHANGED SOMETHING, HOORAY!")
-        print(timeout)
+        # print("WE ACTUALLY CHANGED SOMETHING, HOORAY!")
+        # print(timeout)
         timestamp_preprocess = perf_counter_ns()
         # get the original vartype so we can return consistently
         original_vartype = bqm.vartype

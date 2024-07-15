@@ -343,7 +343,7 @@ int general_simulated_annealing(
           }
             std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
             auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
-            std::cout<<"Entered modified function\n"<<std::endl;
+            // std::cout<<"Entered modified function\n"<<std::endl;
             // exit(1);
             if (elapsedTime >= timeout) break;
             
@@ -360,7 +360,7 @@ int general_simulated_annealing(
 
             std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
             auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
-            std::cout<<"Entered modified function\n"<<std::endl;
+            // std::cout<<"Entered modified function\n"<<std::endl;
             //exit(1);
             if (elapsedTime >= timeout) break;
         }
